@@ -8,6 +8,9 @@ public class GitTest {
 
 
 		System.out.println("박소리!");
+		
+		
+		System.out.println("황운기2");
 
 }
 
