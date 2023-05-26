@@ -6,6 +6,8 @@ public class Git_test {
 		
 		System.out.println("첫번째 commit");
 		
+		System.out.println("두번째 commit");
+		
 
 	}
 
