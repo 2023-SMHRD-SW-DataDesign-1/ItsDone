@@ -64,8 +64,10 @@ public class CityDTO {
 	}
 
 
-	public void setOwner(int owner) {
+	public int setOwner(int owner) {
 		this.owner = owner;
+		
+		return this.owner;
 	}
 
 
