@@ -60,14 +60,14 @@ public class DAO {
 		getConn();
 
 		try {
-			String sql = "select * from goldenkey order by 넘버";
+			String sql = "select * from goldkey order by keynum";
 
 			psmt = conn.prepareStatement(sql);
 
 			rs = psmt.executeQuery();
 
 			while (rs.next()) {
-				goldkeyList.add(new GoldkeyDTO(rs.getInt(3), rs.getString(2), rs.getString(3)));
+				goldkeyList.add(new GoldkeyDTO(rs.getInt(1), rs.getString(2), rs.getString(3)));
 			}
 
 		} catch (Exception e) {

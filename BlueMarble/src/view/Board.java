@@ -13,7 +13,9 @@ public class Board {
 
 	private static ArrayList<PlayerDTO> playerList = new ArrayList<>();
 	private static ArrayList<CityDTO> cityList = new ArrayList<>();
+	private static ArrayList<GoldkeyDTO> goldkeyList = new ArrayList<>();
 	private static GameController gc = new GameController();
+	
 
 	private static String[] playerNameArray = new String[4];
 	private static int[] playerMoneyArray = new int[4];
@@ -117,6 +119,12 @@ public class Board {
 						}
 
 						// 게임진행
+						try {
+							Thread.sleep(1500);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						showBoard(); // 보드판 보여주기
 
 						System.out.println("\n" + playerList.get(playerNum).getName() + "님 차례입니다.");
@@ -164,9 +172,24 @@ public class Board {
 								playerList.get(playerNum).setIslandCount(2);
 							} else if (cityName.equals("황금열쇠")) {
 								playerLocationArray[playerNum] = "황금열쇠";
-								System.out.println("황금열쇠 입니다.");
+								System.out.println("황금열쇠를 뽑습니다.");
+								GoldkeyDTO goldkey = gc.getGoldkeyList();
 								
+								int keynum = goldkey.getGoldNum();
 								
+								System.out.println("이름 : " + goldkey.getGoldname());
+								System.out.println("효과 : " + goldkey.getGoldeffect());
+								
+								if(keynum == 1) {
+									playerMoneyArray[playerNum] = playerList.get(playerNum).decreaseMoney(100000);
+								}else if(keynum ==2) {
+									playerMoneyArray[playerNum] = playerList.get(playerNum).addMoney(200000);
+								}else if(keynum ==3) {
+									playerMoneyArray[playerNum] = playerList.get(playerNum).decreaseMoney(100000);
+								}else if(keynum ==4) {
+									playerMoneyArray[playerNum] = playerList.get(playerNum).addMoney(100000);
+								}
+			
 							} 
 							// 도시
 							else {

@@ -4,6 +4,17 @@ public class GoldkeyDTO {
 
 	// 황금열쇠
 	private int goldNum;
+	
+	public int getGoldNum() {
+		return goldNum;
+	}
+
+
+	public void setGoldNum(int goldNum) {
+		this.goldNum = goldNum;
+	}
+
+
 	private String goldname; //찬스이름
 	private String goldeffect; //찬스효과
 	

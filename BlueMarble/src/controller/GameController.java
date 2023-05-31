@@ -13,11 +13,15 @@ public class GameController {
 	
 	DAO dao = new DAO();
 	
-	public ArrayList<GoldkeyDTO> getGoldkeyList(){
+	public GoldkeyDTO getGoldkeyList(){
+		
+		Random random = new Random();
 		
 		ArrayList<GoldkeyDTO> goldkeyList = dao.selectGoldkey();
 		
-		return goldkeyList;
+		int index = random.nextInt(3);
+		
+		return goldkeyList.get(index);
 	}
 	
 	public int upRank(String name, int money) {
