@@ -53,6 +53,32 @@ public class DAO {
 
 	}
 
+	public ArrayList<GoldkeyDTO> selectGoldkey() {
+		
+		ArrayList<GoldkeyDTO> goldkeyList = new ArrayList<>();
+
+		getConn();
+
+		try {
+			String sql = "select * from goldenkey order by 넘버";
+
+			psmt = conn.prepareStatement(sql);
+
+			rs = psmt.executeQuery();
+
+			while (rs.next()) {
+				goldkeyList.add(new GoldkeyDTO(rs.getInt(3), rs.getString(2), rs.getString(3)));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			getClose();
+		}
+		
+		return goldkeyList;
+	}
+	
 	public ArrayList<CityDTO> selectCity() {
 
 		ArrayList<CityDTO> cityList = new ArrayList<>();

@@ -7,9 +7,9 @@ public class GoldkeyDTO {
 	private String goldname; //찬스이름
 	private String goldeffect; //찬스효과
 	
-	
-	public GoldkeyDTO(String goldname, String goldeffect) {
-		super();
+
+	public GoldkeyDTO(int goldNum, String goldname, String goldeffect) {
+		this.goldNum = goldNum;
 		this.goldname = goldname;
 		this.goldeffect = goldeffect;
 	}

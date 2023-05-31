@@ -6,6 +6,7 @@ import java.util.Scanner;
 import controller.GameController;
 import model.CityDTO;
 import model.DiceDTO;
+import model.GoldkeyDTO;
 import model.PlayerDTO;
 
 public class Board {

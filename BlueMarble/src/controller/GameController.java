@@ -6,11 +6,19 @@ import java.util.Random;
 import model.CityDTO;
 import model.DAO;
 import model.DiceDTO;
+import model.GoldkeyDTO;
 import model.PlayerDTO;
 
 public class GameController {
 	
 	DAO dao = new DAO();
+	
+	public ArrayList<GoldkeyDTO> getGoldkeyList(){
+		
+		ArrayList<GoldkeyDTO> goldkeyList = dao.selectGoldkey();
+		
+		return goldkeyList;
+	}
 	
 	public int upRank(String name, int money) {
 		int cnt = dao.insertRanking(name, money);
