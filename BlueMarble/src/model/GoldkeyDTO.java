@@ -13,4 +13,24 @@ public class GoldkeyDTO {
 		this.goldeffect = goldeffect;
 	}
 
+
+	public String getGoldname() {
+		return goldname;
+	}
+
+
+	public void setGoldname(String goldname) {
+		this.goldname = goldname;
+	}
+
+
+	public String getGoldeffect() {
+		return goldeffect;
+	}
+
+
+	public void setGoldeffect(String goldeffect) {
+		this.goldeffect = goldeffect;
+	}
+
 }
