@@ -90,7 +90,6 @@ public class Board {
 							if (cnt > 0) {
 								System.out.println("랭킹에 등록되었습니다.");
 							}
-
 							break;
 						}
 
@@ -104,11 +103,10 @@ public class Board {
 							continue;
 						}
 
-						// ================================무인도
-						// 체크============================================
+						// 무인도체크
 						if (playerList.get(playerNum).getIslandCount() > 0) {
-							System.out.println(
-									playerList.get(playerNum).getName() + "님은 무인도에 갇혔습니다. 탈출까지 " + playerList.get(playerNum).getIslandCount() + "턴 남았습니다.");
+							System.out.println(playerList.get(playerNum).getName() + "님은 무인도에 갇혔습니다. 탈출까지 "
+									+ playerList.get(playerNum).getIslandCount() + "턴 남았습니다.");
 
 							// 무인도 이미지 보여주기
 
@@ -116,12 +114,11 @@ public class Board {
 							playerNum++;
 							continue;
 						}
-						
-						// 게임진행
 
+						// 게임진행
 						showBoard(); // 보드판 보여주기
-						
-						System.out.println("\n" + playerList.get(playerNum).getName() + "님 차례입니다.");	
+
+						System.out.println("\n" + playerList.get(playerNum).getName() + "님 차례입니다.");
 						System.out.print("[1]주사위를 굴린다 [0]기권한다 >> ");
 						int select = scan.nextInt();
 
@@ -167,12 +164,9 @@ public class Board {
 							} else if (cityName.equals("황금열쇠")) {
 								playerLocationArray[playerNum] = "황금열쇠";
 								System.out.println("황금열쇠 입니다.");
-							} else if (cityName.equals("우주여행")) {
-								System.out.println("우주여행에 도착했습니다.");
-								playerLocationArray[playerNum] = "우주여행";
-
-								System.out.println("이동을 원하는 도시를 입력해 주세요 >> ");
-							}
+								
+								
+							} 
 							// 도시
 							else {
 								// 도시 정보 출력
@@ -229,20 +223,24 @@ public class Board {
 								// 통행료 지불
 								else {
 									if (playerNum != cityOwner) {
-										
-										if(cityHotel) {
-											
-										}else if(cityBuilding) {
-											
-										}else if(cityHouse) {
-											
+
+										int price;
+
+										if (cityHotel) {
+											price = cityPrice * 3;
+										} else if (cityBuilding) {
+											price = cityPrice * 2;
+										} else if (cityHouse) {
+											price = cityPrice;
+										} else {
+											price = cityPrice / 2;
 										}
-										
-										System.out.println(playerList.get(cityOwner).getName() + "님에게 통행요금 " + cityPrice
+
+										System.out.println(playerList.get(cityOwner).getName() + "님에게 통행요금 " + price
 												+ "원을 지불합니다.");
-										playerList.get(cityOwner).addMoney(cityPrice);
-										playerMoneyArray[cityOwner] += cityPrice;
-										playerMoney = playerList.get(playerNum).decreaseMoney(cityPrice);
+										playerList.get(cityOwner).addMoney(price);
+										playerMoneyArray[cityOwner] += price;
+										playerMoney = playerList.get(playerNum).decreaseMoney(price);
 										playerMoneyArray[playerNum] = playerMoney;
 										System.out.println("현재 소지금 : " + playerMoney);
 
@@ -256,30 +254,32 @@ public class Board {
 										}
 									} else {
 										System.out.println("자신이 소유한 도시에 방문하였습니다.");
-										if(!cityHouse) {
+										if (!cityHouse) {
 											System.out.println("별장을 건설합니다.");
 											cityList.get(location).setHouse(true);
-										}else if(!cityBuilding) {
+										} else if (!cityBuilding) {
 											System.out.println("빌딩을 건설합니다.");
 											cityList.get(location).setBuilding(true);
-										}else if(!cityHotel) {
+										} else if (!cityHotel) {
 											System.out.println("호텔을 건설합니다.");
 											cityList.get(location).setHotel(true);
-										}else {
+										} else {
 											System.out.println("더 이상 건설할 건물이 없습니다.");
 										}
 									}
 								}
 							}
 
-							// 보드판 확인
-						} else if (select == 2) {
-							showBoard();
-							continue;
-
 							// 기권
 						} else if (select == 0) {
 							System.out.println(playerList.get(playerNum).getName() + "님께서 기권하셨습니다.");
+							if (playerList.get(playerNum).getCityList().size() > 0) {
+
+								for (int i = 0; i < playerList.get(playerNum).getCityList().size(); i++) {
+									
+								}
+
+							}
 							playerList.get(playerNum).setLive(false);
 							playerLocationArray[playerNum] = "기권";
 							playerMoneyArray[playerNum] = 0;
