@@ -1,6 +1,6 @@
 package view;
 
-public class owned_land_color {
+public class Owned_land_color {
 	//1P 빨강 2P 파랑 3P 초록 4P 노랑	
 	public static final String ANSI_RESET = "\u001B[0m";
 	public static final String ANSI_BLACK = "\u001B[30m";
@@ -23,7 +23,7 @@ public class owned_land_color {
 	
 	public static void main(String[] args) {
 		//땅 구매했을때는 글자 색만
-		System.out.println(ANSI_RED + "1P 땅" + ANSI_RESET);
+		System.out.println(ANSI_RED + "1P 땅");
 		System.out.println(ANSI_BLUE + "2p 땅" + ANSI_RESET);
 		System.out.println(ANSI_GREEN + "3P 땅" + ANSI_RESET);
 		System.out.println(ANSI_YELLOW + "4P 땅" + ANSI_RESET);

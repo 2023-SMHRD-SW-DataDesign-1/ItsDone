@@ -14,9 +14,16 @@ public class Board {
 	private static ArrayList<CityDTO> cityList = new ArrayList<>();
 	private static GameController gc = new GameController();
 
+	private static String[] playerNameArray = new String[4];
+	private static int[] playerMoneyArray = new int[4];
+	private static String[] playerLocationArray = new String[4];
+
 	public static void main(String[] args) {
-		
-		System.out.println("anjdi");
+
+		showOpenning();
+
+//		cityList = gc.getCityList();
+//		showBoard();
 
 		Scanner scan = new Scanner(System.in);
 
@@ -29,6 +36,13 @@ public class Board {
 			switch (scan.nextInt()) {
 
 			case 1:
+				// 화면 표시 정보 초기화
+				for (int i = 0; i < playerNameArray.length; i++) {
+					playerNameArray[i] = "";
+					playerMoneyArray[i] = 0;
+					playerLocationArray[i] = "";
+				}
+
 				playerList.clear();
 				cityList.clear();
 				System.out.println("부루마블 게임을 시작합니다.");
@@ -38,7 +52,11 @@ public class Board {
 				if (playerCount > 1 && playerCount < 5) {
 					for (int i = 0; i < playerCount; i++) {
 						System.out.print((i + 1) + "번째 플레이어의 이름을 입력하세요 >> ");
-						playerList.add(new PlayerDTO(scan.next()));
+						String name = scan.next();
+						playerNameArray[i] = name;
+						playerMoneyArray[i] = 1500000;
+						playerLocationArray[i] = "출발";
+						playerList.add(new PlayerDTO(name));
 						playerList.get(i).setMoney(1500000);
 						playerList.get(i).setLive(true);
 					}
@@ -50,7 +68,7 @@ public class Board {
 
 					// 게임 시작
 					while (true) {
-						// ================================게임 종료 조건 확인============================================
+						// 게임 종료 조건확인
 						alivePlayer.clear();
 
 						for (int i = 0; i < playerList.size(); i++) {
@@ -86,23 +104,28 @@ public class Board {
 							continue;
 						}
 
-						// ================================게임 진행============================================
-						System.out.println("\n" + playerList.get(playerNum).getName() + "님 차례입니다.");
-
-						// ================================무인도 체크============================================
+						// ================================무인도
+						// 체크============================================
 						if (playerList.get(playerNum).getIslandCount() > 0) {
 							System.out.println(
-									"무인도에 갇혔습니다. 탈출까지 " + playerList.get(playerNum).getIslandCount() + "턴 남았습니다.");
+									playerList.get(playerNum).getName() + "님은 무인도에 갇혔습니다. 탈출까지 " + playerList.get(playerNum).getIslandCount() + "턴 남았습니다.");
+
+							// 무인도 이미지 보여주기
 
 							playerList.get(playerNum).decreaseIslandCount(); // 무인도 count 1씩 감소
 							playerNum++;
 							continue;
 						}
+						
+						// 게임진행
 
-						System.out.print("[1]주사위를 굴린다 [2]건물을 구입한다 [0]기권한다 >> ");
+						showBoard(); // 보드판 보여주기
+						
+						System.out.println("\n" + playerList.get(playerNum).getName() + "님 차례입니다.");	
+						System.out.print("[1]주사위를 굴린다 [0]기권한다 >> ");
 						int select = scan.nextInt();
 
-						// ================================주사위 굴리기============================================
+						// 주사위 굴리기
 						if (select == 1) {
 
 							DiceDTO dice = gc.rollDice();
@@ -133,21 +156,24 @@ public class Board {
 							boolean cityBuilding = cityList.get(location).isBuilding();
 							boolean cityHotel = cityList.get(location).isHotel();
 
-							// ================================특수 지점인 경우============================================
-
+							// 특수 지점
 							if (cityName.equals("출발")) {
 								System.out.println("출발지점 입니다.");
+								playerLocationArray[playerNum] = "출발";
 							} else if (cityName.equals("무인도")) {
 								System.out.println("무인도에 갇혔습니다. 3턴간 움직일 수 없습니다.");
+								playerLocationArray[playerNum] = "무인도";
 								playerList.get(playerNum).setIslandCount(2);
 							} else if (cityName.equals("황금열쇠")) {
+								playerLocationArray[playerNum] = "황금열쇠";
 								System.out.println("황금열쇠 입니다.");
 							} else if (cityName.equals("우주여행")) {
 								System.out.println("우주여행에 도착했습니다.");
+								playerLocationArray[playerNum] = "우주여행";
 
 								System.out.println("이동을 원하는 도시를 입력해 주세요 >> ");
 							}
-							// ================================도시구매============================================
+							// 도시
 							else {
 								// 도시 정보 출력
 								System.out.println(
@@ -179,6 +205,7 @@ public class Board {
 								}
 								System.out.println(
 										"\n---------------------------------------------------------------------------");
+								playerLocationArray[playerNum] = cityName;
 
 								if (cityOwner == -1 && cityPrice < playerMoney) {
 
@@ -188,6 +215,7 @@ public class Board {
 										playerList.get(playerNum).buyCity(cityList.get(location));
 										cityOwner = cityList.get(location).setOwner(playerNum); // city의 owner 변경
 										playerMoney = playerList.get(playerNum).decreaseMoney(cityPrice); // player 돈 차감
+										playerMoneyArray[playerNum] = playerMoney;
 
 										System.out.println("구매를 완료했습니다.");
 										System.out.println("구매자 : " + playerList.get(cityOwner).getName() + "님, 소지금 : "
@@ -198,40 +226,63 @@ public class Board {
 									}
 
 								}
-								// ================================통행료 지불============================================
+								// 통행료 지불
 								else {
 									if (playerNum != cityOwner) {
+										
+										if(cityHotel) {
+											
+										}else if(cityBuilding) {
+											
+										}else if(cityHouse) {
+											
+										}
+										
 										System.out.println(playerList.get(cityOwner).getName() + "님에게 통행요금 " + cityPrice
 												+ "원을 지불합니다.");
 										playerList.get(cityOwner).addMoney(cityPrice);
+										playerMoneyArray[cityOwner] += cityPrice;
 										playerMoney = playerList.get(playerNum).decreaseMoney(cityPrice);
+										playerMoneyArray[playerNum] = playerMoney;
 										System.out.println("현재 소지금 : " + playerMoney);
 
 										if (playerMoney < 0) {
 											playerList.get(playerNum).setLive(false);
+											playerMoneyArray[playerNum] = 0;
+											playerLocationArray[playerNum] = "파산";
 											System.out.println(playerName + "님께서 파산하셨습니다.");
 											playerNum++;
 											continue;
 										}
 									} else {
-										System.out.println("자신이 소유한 도시 입니다.");
+										System.out.println("자신이 소유한 도시에 방문하였습니다.");
+										if(!cityHouse) {
+											System.out.println("별장을 건설합니다.");
+											cityList.get(location).setHouse(true);
+										}else if(!cityBuilding) {
+											System.out.println("빌딩을 건설합니다.");
+											cityList.get(location).setBuilding(true);
+										}else if(!cityHotel) {
+											System.out.println("호텔을 건설합니다.");
+											cityList.get(location).setHotel(true);
+										}else {
+											System.out.println("더 이상 건설할 건물이 없습니다.");
+										}
 									}
 								}
 							}
 
-							// ================================건물구매============================================
+							// 보드판 확인
 						} else if (select == 2) {
-							if (playerList.get(playerNum).getCityList().size() > 0) {
-								// 건물 구매
-							} else {
-								System.out.println("소유중인 도시가 없습니다.");
-								continue;
-							}
+							showBoard();
+							continue;
 
-							// ================================기권============================================
+							// 기권
 						} else if (select == 0) {
 							System.out.println(playerList.get(playerNum).getName() + "님께서 기권하셨습니다.");
 							playerList.get(playerNum).setLive(false);
+							playerLocationArray[playerNum] = "기권";
+							playerMoneyArray[playerNum] = 0;
 							playerNum++;
 							continue;
 						}
@@ -262,6 +313,7 @@ public class Board {
 				break;
 
 			case 0:
+				showEnding();
 				System.out.println("게임을 종료합니다.");
 				isRun = false;
 				scan.close();
@@ -279,5 +331,326 @@ public class Board {
 	public static void showMenu() {
 		System.out.println("=============부루마블 게임=============");
 		System.out.print("[1]게임시작 [2]랭킹확인 [0]종료 >> ");
+	}
+
+	public static void showBoard() {
+		System.out.printf("%-6s", "+---------");
+		System.out.printf("%-6s", "---------");
+		System.out.printf("%-6s", "---------");
+		System.out.printf("%-6s", "---------");
+		System.out.printf("%-6s", "---------");
+		System.out.printf("%-6s", "---------");
+		System.out.printf("%-6s", "---------");
+		System.out.printf("%-6s", "---------");
+		System.out.printf("%-6s%n", "----------------+");
+
+		System.out.printf("|%8s|", cityList.get(14).getName() + "[15]");
+		System.out.printf("|%8s|", cityList.get(15).getName() + "[16]");
+		System.out.printf("|%8s|", cityList.get(16).getName() + "[17]");
+		System.out.printf("|%8s|", cityList.get(17).getName() + "[18]");
+		System.out.printf("|%8s|", cityList.get(18).getName() + "[19]");
+		System.out.printf("|%8s|", cityList.get(19).getName() + "[20]");
+		System.out.printf("|%8s|", cityList.get(20).getName() + "[21]");
+		System.out.printf("|%8s|%n", cityList.get(21).getName() + "[22]");
+		System.out.printf("|%9d|", cityList.get(14).getPrice());
+		System.out.printf("|%9d|", cityList.get(15).getPrice());
+		System.out.printf("|%9d|", cityList.get(16).getPrice());
+		System.out.printf("|%9d|", cityList.get(17).getPrice());
+		System.out.printf("|%9d|", cityList.get(18).getPrice());
+		System.out.printf("|%9d|", cityList.get(19).getPrice());
+		System.out.printf("|%9d|", cityList.get(20).getPrice());
+		System.out.printf("|%9d|%n", cityList.get(21).getPrice());
+		System.out.printf("%-6s", "|--------");
+		System.out.printf("%-6s", "---------");
+		System.out.printf("%-6s", "---------");
+		System.out.printf("%-6s", "---------");
+		System.out.printf("%-6s", "---------");
+		System.out.printf("%-6s", "---------");
+		System.out.printf("%-6s", "---------");
+		System.out.printf("%-6s%n", "-------------------------|");
+		System.out.printf("|%-8s|", cityList.get(13).getName() + "[14]");
+		System.out.printf("%-67s", " ");
+		System.out.printf("|%-8s|%n", cityList.get(22).getName() + "[23]");
+		System.out.printf("|%-9s|", cityList.get(13).getPrice());
+		System.out.printf("%-5s", " ");
+		System.out.print("★플레이어★");
+		System.out.printf("%-5s", " ");
+		System.out.print("★보유금액★");
+		System.out.printf("%-5s", " ");
+		System.out.print("★위치★");
+		System.out.printf("%-32s", " ");
+		System.out.printf("|%-9d|%n", cityList.get(22).getPrice());
+		System.out.printf("|%-9s|", "---------");
+		System.out.printf("%-4s", " ");
+		System.out.printf("|%-8s|", playerNameArray[0]);
+		System.out.printf("%-1s", " ");
+		System.out.printf("|%-8s|", playerMoneyArray[0]);
+		System.out.printf("%-1s", " ");
+		System.out.printf("|%-8s|", playerLocationArray[0]);
+		System.out.printf("%-29s", " ");
+		System.out.printf("|%-8s|%n", "---------");
+		System.out.printf("|%-8s|", cityList.get(12).getName() + "[13]");
+		System.out.printf("%-4s", " ");
+		System.out.printf("|%-8s|", playerNameArray[1]);
+		System.out.printf("%-1s", " ");
+		System.out.printf("|%-8s|", playerMoneyArray[1]);
+		System.out.printf("%-1s", " ");
+		System.out.printf("|%-8s|", playerLocationArray[1]);
+		System.out.printf("%-29s", " ");
+		System.out.printf("|%-8s|%n", cityList.get(23).getName() + "[24]");
+		System.out.printf("|%-9d|", cityList.get(12).getPrice());
+		System.out.printf("%-4s", " ");
+		System.out.printf("|%-8s|", playerNameArray[2]);
+		System.out.printf("%-1s", " ");
+		System.out.printf("|%-8s|", playerMoneyArray[2]);
+		System.out.printf("%-1s", " ");
+		System.out.printf("|%-8s|", playerLocationArray[2]);
+		System.out.printf("%-29s", " ");
+		System.out.printf("|%-9d|%n", cityList.get(23).getPrice());
+		System.out.printf("|%-9s|", "---------");
+		System.out.printf("%-4s", " ");
+		System.out.printf("|%-8s|", playerNameArray[3]);
+		System.out.printf("%-1s", " ");
+		System.out.printf("|%-8s|", playerMoneyArray[3]);
+		System.out.printf("%-1s", " ");
+		System.out.printf("|%-8s|", playerLocationArray[3]);
+		System.out.printf("%-29s", " ");
+		System.out.printf("|%-8s|%n", "---------");
+		System.out.printf("|%-8s|", cityList.get(11).getName() + "[12]");
+		// System.out.printf("|%-4s|", " ");
+		System.out.printf("%-67s", " ");
+		System.out.printf("|%-8s|%n", cityList.get(24).getName() + "[25]");
+		System.out.printf("|%-9d|", cityList.get(11).getPrice());
+		System.out.printf("%-4s", " ");
+		System.out.printf("%-14s", "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
+		System.out.printf("%-4s", " ");
+		System.out.printf("%-14s", "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
+		System.out.printf("%-23s", " ");
+		System.out.printf("|%-9s|%n", cityList.get(24).getPrice());
+		System.out.printf("|%-9s|", "---------");
+		System.out.printf("%-3s", " ");
+		System.out.print(" |               | "); // 15
+		System.out.printf("%-3s", " ");
+		System.out.print(" |               | "); // 15
+		System.out.printf("%-23s", " ");
+		System.out.printf("|%-8s|%n", "---------");
+		System.out.printf("|%-8s|", cityList.get(10).getName() + "[11]");
+		System.out.printf("%-4s", " "); // 주사위1 상반
+		System.out.printf("|%-4s", "    ");
+		System.out.print("●");
+		System.out.print("      "); // 6
+		System.out.print("●");
+		System.out.print("   |"); // 까지 // 4
+		System.out.printf("%-5s", " "); // 주사위2 상반
+		System.out.print("|    ");
+		System.out.print("●");
+		System.out.print("      "); // 6
+		System.out.print("●");
+		System.out.print("   |"); // 까지 //4
+		System.out.printf("%-25s", " ");
+		System.out.printf("|%-8s|%n", cityList.get(25).getName() + "[26]");
+		System.out.printf("|%-9d|", cityList.get(10).getPrice());
+		System.out.printf("%-3s", " ");
+		System.out.print(" |               | ");
+		System.out.printf("%-3s", " ");
+		System.out.print(" |               | ");
+		System.out.printf("%-24s", " ");
+		System.out.printf("|%-8d|%n", cityList.get(25).getPrice());
+		System.out.printf("|%-9s|", "---------");
+		System.out.printf("%-4s", " "); // 주사위1
+		System.out.printf("|%-4s", "    ");
+		System.out.print("●");
+		System.out.print("      "); // 6
+		System.out.print("●");
+		System.out.print("   |"); // 까지 // 4
+		System.out.printf("%-5s", " "); // 주사위2
+		System.out.print("|    ");
+		System.out.print("●");
+		System.out.print("      "); // 6
+		System.out.print("●");
+		System.out.print("   |"); // 까지 //4
+		System.out.printf("%-25s", " ");
+		System.out.printf("|%-7s|%n", "--------");
+		System.out.printf("|%-8s|", cityList.get(9).getName() + "[10]");
+		System.out.printf("%-3s", " ");
+		System.out.print(" |               | "); // 15
+		System.out.printf("%-3s", " ");
+		System.out.print(" |               | "); // 15
+		System.out.printf("%-23s", " ");
+		System.out.printf("|%-8s|%n", cityList.get(26).getName() + "[27]");
+		System.out.printf("|%-9s|", cityList.get(9).getPrice());
+		System.out.printf("%-4s", " "); // 주사위1 하반
+		System.out.print("|    ");
+		System.out.print("●");
+		System.out.print("      ");
+		System.out.print("●");
+		System.out.print("   |"); // 까지
+		System.out.printf("%-5s", " "); // 주사위2 하반
+		System.out.print("|    ");
+		System.out.print("●");
+		System.out.print("      ");
+		System.out.print("●");
+		System.out.print("   |"); // 까지
+		System.out.printf("%-25s", " ");
+		System.out.printf("|%-8d|%n", cityList.get(26).getPrice());
+		System.out.printf("|%-9s|", "---------");
+		System.out.printf("%-3s", " ");
+		System.out.print(" |               | "); // 15
+		System.out.printf("%-3s", " ");
+		System.out.print(" |               | "); // 15
+		System.out.printf("%-24s", " ");
+		System.out.printf("|%-7s|%n", "--------");
+		System.out.printf("|%-8s|", cityList.get(8).getName() + "[9]");
+		System.out.printf("%-4s", " ");
+		System.out.printf("%-14s", "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
+		System.out.printf("%-4s", " ");
+		System.out.printf("%-14s", "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
+		System.out.printf("%-24s", " ");
+		System.out.printf("|%-7s|%n", cityList.get(27).getName() + "[28]");
+		System.out.printf("|%-9d|", cityList.get(8).getPrice());
+		System.out.printf("%-68s", " ");
+		System.out.printf("|%-8d|%n", cityList.get(27).getPrice());
+		System.out.printf("%-6s", "|--------");
+		System.out.printf("%-6s", "---------");
+		System.out.printf("%-6s", "---------");
+		System.out.printf("%-6s", "---------");
+		System.out.printf("%-6s", "---------");
+		System.out.printf("%-6s", "---------");
+		System.out.printf("%-6s", "---------");
+		System.out.printf("%-6s%n", "-------------------------|");
+		System.out.printf("|%-8s|", cityList.get(7).getName() + "[8]");
+		System.out.printf("|%-8s|", cityList.get(6).getName() + "[7]");
+		System.out.printf("|%-8s|", cityList.get(5).getName() + "[6]");
+		System.out.printf("|%-8s|", cityList.get(4).getName() + "[5]");
+		System.out.printf("|%-8s|", cityList.get(3).getName() + "[4]");
+		System.out.printf("|%-8s|", cityList.get(2).getName() + "[3]");
+		System.out.printf("|%-8s|", cityList.get(1).getName() + "[2]");
+		System.out.printf("|%-8s|%n", cityList.get(0).getName() + "[1]");
+		System.out.printf("|%-9s|", cityList.get(7).getPrice());
+		System.out.printf("|%-9d|", cityList.get(6).getPrice());
+		System.out.printf("|%-9d|", cityList.get(5).getPrice());
+		System.out.printf("|%-10s|", cityList.get(4).getPrice());
+		System.out.printf("|%-9d|", cityList.get(3).getPrice());
+		System.out.printf("|%-9d|", cityList.get(2).getPrice());
+		System.out.printf("|%-9d|", cityList.get(1).getPrice());
+		System.out.printf("|%-9s|%n", "<-");
+		System.out.printf("%-6s", "+---------");
+		System.out.printf("%-6s", "---------");
+		System.out.printf("%-6s", "---------");
+		System.out.printf("%-6s", "---------");
+		System.out.printf("%-6s", "---------");
+		System.out.printf("%-6s", "---------");
+		System.out.printf("%-6s", "---------");
+		System.out.printf("%-6s%n", "------------------------+");
+	}
+
+	public static void showOpenning() {
+		System.out.println("\r\n"
+				+ "                                                ...                                                 \r\n"
+				+ "                                            .-::~~~~~~,.                                            \r\n"
+				+ "                                          .:;::::::::::;:,.                                         \r\n"
+				+ "                                       .-~::::~--~~~::::~~:~.                                       \r\n"
+				+ "                                       ~:::~-,,,,,,,,-~:;;::~,                                      \r\n"
+				+ "                                     .:~::-.,.,,--:~-:~-:;::::,                                     \r\n"
+				+ "                                    .;;:~--...,.-~:~~-~:::!:~;;,                                    \r\n"
+				+ "                                   .::~--~- ,:~-~:;;::;;;*=!;:~:-                                   \r\n"
+				+ "                                   :::~~::::;!::;;!:-~,-:;:-:::::.                                  \r\n"
+				+ "                                  ~:~~-~~:!*!;;;;;~,.,,;!,~~~~::~~.                                 \r\n"
+				+ "                                 ,:~~-~:;**;:;!;*;::-,,~~~~-~-~::;,                                 \r\n"
+				+ "                                 -:;-::;!!;:~;:;;;;:.-,-,.-,~--~::~.                                \r\n"
+				+ "                                ,~:~-:;!!;~~~:~;;;~----,,~:-~-,~:::,                                \r\n"
+				+ "                                -::--::~;!:::;;!:,.-,,~--::::~,~:::~                                \r\n"
+				+ "                                ~::,::,;!!;!;:,~-,,~,,--~~;::;~-~:::                                \r\n"
+				+ "                                :::-,-~:!*;:::.-~~::-,.,-~:::;:~~:::.                               \r\n"
+				+ "                                ::~,-,,:;!;;~: ,,~ -~~---~:!;::~-~:~-                               \r\n"
+				+ "                               .:::.:-::;!~-:!-,.,~-~~~~~:~;:::--::~~                               \r\n"
+				+ "                               -::~-:,~~!;::;!---~--~~~~~~~,-~~--:::~                               \r\n"
+				+ "                               -;:~-~~~~:;:;,,---,~~-~~::;!~~-:~-:::-                               \r\n"
+				+ "                               .::~,;:.-:;-~--,,, ,~~-~::::;~~:~-::~~                               \r\n"
+				+ "          .               ......:::.:~-,.:;~~-,. ..,,,-~:---:~~--::~~-     ,,,         ,,-          \r\n"
+				+ "        -:~~;.         -~~~~~~~~:::~~~;:~::::~--,,.    .~~,.-~---:::~:~  ,:~~::-     .~~~::~        \r\n"
+				+ "        ;~~~;:        ,::~:~~:~~~~~~~:::::::~::--,~~. .-:,.,~-,,-::::~:~ ~:~~::;     -:~~~::        \r\n"
+				+ "       ~:,..~:-  .,   ;~.                  .,~::,~~~::::::::::::::, .-~;-:-..,~~~~::::~...~:-       \r\n"
+				+ "      .:-   ,::-:~::,,:,      ...........   .-::~::::::::::::::::~   .~:::.  .~:;;;;;~,   -:~       \r\n"
+				+ "      .:-   ,:;::~~::::.  .-:::::::::::;:,   ,::;;;:..         ,:~   ,::~~.               -:~       \r\n"
+				+ "      .:-   .:;~,..-~~:,  .~::::::::::::~-   ,:::::-   .---,  .,:~.  .:::~.   ,,,,...,.   -:~       \r\n"
+				+ "      .:-    :~    .,~:,   ~::::;;::;;;;;-   ,::::;,  .-:::-  .,:~.   ~:::.  .~:::::::-  .-:~       \r\n"
+				+ "      .:-   ,:,      ~:.   ~:::              ,::::~.  ,::;;~   ,:~   .-~:~.   -::::::-,   ,~:       \r\n"
+				+ "      .:-   ,~,      ~:,   ~::-.             ,::::-   -::;;~   ,:~    ..-:.  ..      .. ..-:: .     \r\n"
+				+ "      .:-   .~,   . .~:,   ~::.    ~~~~~~~~~~~::::.  .~::;;~   ,:~      ,:,............ ..-;:~::    \r\n"
+				+ "      .:-   .~~.    ,::,   ~:~.   ,::::::::::::::-  ..:::;;~   ,:~   .~~~~~~~~~~~~~~~~~~~~~~~~::~   \r\n"
+				+ "      .:-   .::~,.,-~::,   ~:-    -::::::::::::::,   ~;::;;~   ,:~   .~-................... ..-~:,  \r\n"
+				+ "      .:-   .::::::::::,   ~:,   .~:::::::::::::~.  .:;::;;~   ,:~   .~-                      .~;,  \r\n"
+				+ "       ;-   .~~~~~~~~~-.  .~~    ,:~::::::::::::,  ..~~~~::-. .-:~   .~:::~~~~~~,.   ~~~~~~:~::~~   \r\n"
+				+ "       ;~.                .~-                ,~:,    .        .,:~ ..,~:::,,,,,,.    ,,,,,~:~;;;,   \r\n"
+				+ "       ;:~.             ..~:~.               ,~:-.             ,:~.  .:::~.               -~~.,.    \r\n"
+				+ "    .:;::::~::::::::::::::;;:::::::::::::::::::::::::::::::::::::::::::::::~~~~::::::~-  .-::       \r\n"
+				+ "   ,~::~~::~::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::-,,,,,,,---,.  .-;:       \r\n"
+				+ "   :~-....,..................................-~~,..,~:-~~,~:::~,...-::-,:~.               ,~~       \r\n"
+				+ "  .:,.      . .,  .....       .. ...  .  ... ,::,...~:.-: -::~ .-:-.,:, ::.  .~:::~~~~~::~~:~       \r\n"
+				+ "   ;~--------,,-  ..,,,,,,,,,,-,,,,   .~-,,,,-::::~.~~.-: -::~.~;;:-.~, ::,   -::::::;:::~::~       \r\n"
+				+ "   ,;:::::::;::~ . .~:::::::::::::- . ,;:~::;:::::~.~~.-: -::~  ....,:, ::~   .~::;;;:::-.,~-       \r\n"
+				+ "    ,;;;;;;;;;:~.  .~;:;;;;;;;;;;:- . ,::;;;!;::::~... -: -::::-,,,-::, :::~.  .-~:~~:-  .::-       \r\n"
+				+ "              ::-..-:;          ,:~, .~:: .-,-~~::-.--.-: -::~,,------. ::::~-.   ......-::~.       \r\n"
+				+ "              -::~~:;-           ~~~~;;: .~;.:~::~.,~:.-: -::~ ....  .  :::::::~-,..,~~~:;-         \r\n"
+				+ "               :;::;~             :::~:,.-;,,:;::-.-::,-:.-::~.~;;;;::-.~::~-;:;;:::::::;,          \r\n"
+				+ "                ,~~,               .-,..~;::-~:~~.,~::,-:.-::~.-:::::~,.~::~  ,~~~~~~~-.            \r\n"
+				+ "                                    .:,~!,~:.~;:,.~~:~.,~.-~~~........ .~::-                        \r\n"
+				+ "                                     .-- ,-~,~;:~~::::~~:-~::::~~--~~~~~::;                         \r\n"
+				+ "                                        .~.,,.~~;:::::::::::::::::::::::::,                         \r\n"
+				+ "                                         ~     ,------------------------,.                          \r\n"
+				+ "");
+	}
+
+	public static void showEnding() {
+		System.out.println("\r\n" + "\r\n"
+				+ "                                                      .                                  \r\n"
+				+ "                                    .                      .      .                      \r\n"
+				+ "                                                ,..                                      \r\n"
+				+ "                                              ,~;:~:-                                    \r\n"
+				+ "                                            .::;;;;;:~              .-,                  \r\n"
+				+ "                                           .:;;:-,.:::-            ~;:;-                 \r\n"
+				+ "                                           ~:;:     ~:-      .,.  :;:;;:                 \r\n"
+				+ "                 ,,-,,,                    ::~      -~:   . .-;~ ~;:--;~                 \r\n"
+				+ "               .;:;;;!:,                   :;. ,-   ~~: -    ~;,,:;- ::,                 \r\n"
+				+ "              ,;;;::::;:-            ,,.   ,.  :;   ~;,~;,  .;:-:;:~-:-                  \r\n"
+				+ "        .    ~::;:.   ~;~.         .;~:*.      ;:  ,;:-~:.  ~!:-~;:;:-                   \r\n"
+				+ "            -:!:,      ::,  .     ,~;!;;,     ~;~ ,;~--!:  ,:;~,:;;~:  ,~                \r\n"
+				+ "           .:;;.  -   .:;,    ,~  :;:,-;-    .::.-:;, ~:: .:;:~~:::.  -::                \r\n"
+				+ "           -;;-  :;   .:~,..  ::.-;!- :~,    ,:: -;:, :!- ~:;;.,;;,  -:;~                \r\n"
+				+ "           ;;:. ,~:   ,:~~;- .:~-:;:.~:: .   ~!- .~;: :;,-;:!; .;::.-:;-                 \r\n"
+				+ "          .;;~  -;~   ::~~;. -:;:~;~,;;.     :;,  .;~.:;;:~:;:  :;;;;:,                  \r\n"
+				+ "          ,;;,  ~;~  :;:.;:  ~::-:;;;:.  .~ ,:~.  ~:- ~!;:,~!,   ~-:-,                   \r\n"
+				+ "           !:  ,;;,.~:;-:;; -:~:~;:;:.  .:~..;!  .~;, .:~  :;.                           \r\n"
+				+ "           .   :;;.:;:-.:;-,~!:~~;:~.  ,;:- ,;;  ::~      ~;:.                           \r\n"
+				+ "              .:;~ ~;;--;: :;;;.~;:   ,-:~  .;:.~;:      .:;~                            \r\n"
+				+ "       .     .,:;,  ~;~,;:~:;;~ ~:; .,;;~.   ::;;:. ~~-,~:!:                             \r\n"
+				+ "              -!;   ::-.;;;;:;- ~:;;~*;~     .:;,   :;:::;:,                             \r\n"
+				+ "              ~!:  ,;~  -~--:;.  ~;;;:-              ~;!;~,                              \r\n"
+				+ "              ~;~ .;~,   . :::    -~-.                ..                                 \r\n"
+				+ "              ~!~-:;-     ~;:-.                                                          \r\n"
+				+ "              ,:!;:- .,,,-::~                                                            \r\n"
+				+ "               ~:~.  ,~;*:;:                                                             \r\n"
+				+ "                     .::::~.                                                             \r\n"
+				+ "                               .                              .                          \r\n"
+				+ "                  .                                                                      \r\n"
+				+ "                                                                                         \r\n"
+
+				+ " ");
+	}
+
+	private static int getKorCnt(String kor) {
+		int cnt = 0;
+		for (int i = 0; i < kor.length(); i++) {
+			if (kor.charAt(i) >= '가' && kor.charAt(i) <= '힣') {
+				cnt++;
+			}
+		}
+		return cnt;
+	}
+
+	public static String convert(String word, int size) {
+		String formatter = String.format("%%%ds", size - getKorCnt(word));
+		return String.format(formatter, word);
 	}
 }
