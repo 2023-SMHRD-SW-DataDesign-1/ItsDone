@@ -15,7 +15,7 @@ public class boardpan {
 		System.out.printf("%-6s%n", "----------------+");
 		System.out.printf("|%-8s|", "몬트리올[15]");
 		System.out.printf("|%-8s|", "황금열쇠[16]");
-		System.out.printf("|%-8s|", "상파울로[17]");
+		System.out.printf("|%-8s|", "빌리[17]");
 		System.out.printf("|%-8s|", "시드니[18]");
 		System.out.printf("|%-8s|", "하와이[19]");
 		System.out.printf("|%-8s|", "리스본[20]");
@@ -102,7 +102,7 @@ public class boardpan {
 		System.out.print(" |                 | "); 
 		System.out.printf("%-20s", " ");
 		System.out.printf("|%-8s|%n", "--------");
-		System.out.printf("|%-8s|", "코펜하겐[11]");
+		System.out.printf("|%-8s|", "독도[11]");
 		System.out.printf("%-4s", " "); // 주사위1 상반
 		System.out.print("|    ");
 		System.out.print("●");
@@ -116,7 +116,7 @@ public class boardpan {
 		System.out.print("●");
 		System.out.print("     |"); // 까지
 		System.out.printf("%-20s", " ");
-		System.out.printf("|%-8s|%n", "런던[26]");
+		System.out.printf("|%-8s|%n", "푸켓[26]");
 		System.out.printf("|%-9d|", 160000);
 		System.out.printf("%-4s", " ");
 		System.out.print(" |                 | ");
@@ -192,7 +192,7 @@ public class boardpan {
 		System.out.printf("|%-8s|", "황금열쇠[5]");
 		System.out.printf("|%-8s|", "싱가포르[4]");
 		System.out.printf("|%-8s|", "마닐라[3]");
-		System.out.printf("|%-8s|", "타이페이[2]");
+		System.out.printf("|%-8s|", "타이티[2]");
 		System.out.printf("|%-8s|%n", "출발[1]");
 		System.out.printf("|%-8s|", "-*");
 		System.out.printf("|%-8d|", 120000);
