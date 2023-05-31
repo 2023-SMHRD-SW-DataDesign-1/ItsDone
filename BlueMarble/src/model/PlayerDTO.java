@@ -9,7 +9,7 @@ public class PlayerDTO {
 	private int location;
 	private int islandCount;
 	private boolean isLive;
-	private ArrayList<CityDTO> cityList; // 소유하고 있는 도시
+	private ArrayList<CityDTO> cityList = new ArrayList<>();; // 소유하고 있는 도시
 
 	public PlayerDTO(String name) {
 		this.name = name;
@@ -73,6 +73,18 @@ public class PlayerDTO {
 	
 	public void sellCity(CityDTO city) {
 		this.cityList.remove(city);
+	}
+	
+	public int getIslandCount() {
+		return islandCount;
+	}
+
+	public void setIslandCount(int islandCount) {
+		this.islandCount = islandCount;
+	}
+	
+	public void decreaseIslandCount() {
+		this.islandCount --;
 	}
 
 }
