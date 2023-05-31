@@ -7,6 +7,7 @@ public class PlayerDTO {
 	private String name;
 	private int money;
 	private int location;
+	private int islandCount;
 	private boolean isLive;
 	private ArrayList<CityDTO> cityList; // 소유하고 있는 도시
 
@@ -37,6 +38,18 @@ public class PlayerDTO {
 	public void setMoney(int money) {
 		this.money = money;
 	}
+	
+	public int addMoney(int money) {
+		this.money += money;
+		
+		return this.money;
+	}
+	
+	public int decreaseMoney(int money) {
+		this.money -= money;
+		
+		return this.money;
+	}
 
 	public ArrayList<CityDTO> getCityList() {
 		return cityList;
@@ -54,8 +67,12 @@ public class PlayerDTO {
 		this.isLive = isLive;
 	}
 	
-	public void go() {
-		
+	public void buyCity(CityDTO city) {
+		this.cityList.add(city);
+	}
+	
+	public void sellCity(CityDTO city) {
+		this.cityList.remove(city);
 	}
 
 }
