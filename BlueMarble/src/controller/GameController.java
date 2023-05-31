@@ -1,12 +1,36 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import model.CityDTO;
+import model.DAO;
 import model.DiceDTO;
 import model.PlayerDTO;
 
 public class GameController {
+	
+	DAO dao = new DAO();
+	
+	public int upRank(String name, int money) {
+		int cnt = dao.insertRanking(name, money);
+		
+		return cnt;
+	}
+	
+	public ArrayList<CityDTO> getCityList() {
+		
+		ArrayList<CityDTO> cityList = dao.selectCity();
+		
+		return cityList;
+	}
+	
+	public ArrayList<PlayerDTO> getRankList(){
+		
+		ArrayList<PlayerDTO> rankList = dao.selectRanking();
+		
+		return rankList;
+	}
 	
 	
 	public void buyCity(PlayerDTO player, CityDTO city) {

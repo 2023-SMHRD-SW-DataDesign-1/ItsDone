@@ -14,6 +14,11 @@ public class PlayerDTO {
 	public PlayerDTO(String name) {
 		this.name = name;
 	}
+	
+	public PlayerDTO(String name, int money) {
+		this.name = name;
+		this.money = money;
+	}
 
 	public int getLocation() {
 		return location;
