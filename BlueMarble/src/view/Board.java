@@ -141,8 +141,38 @@ public class Board {
 							}
 							// ================================도시 구매============================================
 							else {
+								// 도시 정보 출력
+								System.out.println("---------------------------------------------------------------------------");
+								System.out.println("도시명\t\t통행료\t\t소유자\t\t별장\t빌딩\t호텔");
+								System.out.println("---------------------------------------------------------------------------");
+								System.out.print(cityName+"\t\t"+cityPrice+"\t\t");
 								
+								if(cityOwner != -1) {
+									System.out.print(playerList.get(cityOwner).getName()+"\t\t");
+								}else {
+									System.out.print("X\t\t");
+								}
+								if(cityHouse) {
+									System.out.print("O\t");
+								}
+								else {
+									System.out.print("X\t");
+								}
+								if(cityBuilding) {
+									System.out.print("O\t");
+								}
+								else {
+									System.out.print("X\t");
+								}
+								if(cityHotel) {
+									System.out.print("O\t");
+								}
+								else {
+									System.out.print("X\t");
+								}
+								System.out.println("\n---------------------------------------------------------------------------");
 								
+				
 								if (cityOwner == -1 && cityPrice < playerMoney) {
 
 									System.out.print(cityName + "(" + cityPrice + "원)도시를 구매하시겠습니까? [1]구매 [0]취소 >> ");
@@ -184,7 +214,7 @@ public class Board {
 
 							// ================================건물 구매============================================
 						} else if (select == 2) {
-							if (playerList.get(playerNum).getCityList() != null) {
+							if (playerList.get(playerNum).getCityList().size() > 0) {
 								// 건물 구매
 							} else {
 								System.out.println("소유중인 도시가 없습니다.");
@@ -195,7 +225,10 @@ public class Board {
 						} else if (select == 0) {
 							System.out.println(playerList.get(playerNum).getName() + "님께서 기권하셨습니다.");
 							playerList.get(playerNum).setLive(false);
+							playerNum++;
+							continue;
 						}
+						
 						playerNum++;
 					}
 
