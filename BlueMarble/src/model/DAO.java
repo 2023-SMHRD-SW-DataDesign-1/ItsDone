@@ -30,6 +30,8 @@ public class DAO {
 		RankingDTO ran = new RankingDTO(Id, Score, Playtime, Ranking);
 
 		insertRanking(ran);
+		
+		
 	}
 
 	public static void getConn() {
@@ -72,7 +74,7 @@ public class DAO {
 
 	}
 
-	public void selectCity() {
+	public static void selectCity() {
 		getConn();
 		try {
 			String sql = "select CITY from CITY order by 정렬";
@@ -88,7 +90,7 @@ public class DAO {
 		}
 	}
 
-	public void selectRanking(RankingDTO dto) {
+	public static void selectRanking() {
 		getConn();
 		try {
 			String sql = "select * from RANKING ";
