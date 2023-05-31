@@ -1,21 +1,61 @@
 package model;
 
+import java.util.ArrayList;
+
 public class PlayerDTO {
 
-	//플레이어
-	private String id; //플레이어아이디
-	private int amount; //재산
-	private String palyercolor; //플레이어색상
-	private String chancewhether; //찬스유무
-	private String documents; //땅문서
-	
-	
-	public PlayerDTO(String id, int amount, String palyercolor, String chancewhether, String documents) {
-		super();
-		this.id = id;
-		this.amount = amount;
-		this.palyercolor = palyercolor;
-		this.chancewhether = chancewhether;
-		this.documents = documents;
+	private String name;
+	private int money;
+	private int location;
+	private boolean isLive;
+	private ArrayList<CityDTO> cityList; // 소유하고 있는 도시
+
+	public PlayerDTO(String name) {
+		this.name = name;
 	}
+
+	public int getLocation() {
+		return location;
+	}
+
+	public void setLocation(int location) {
+		this.location = location;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getMoney() {
+		return money;
+	}
+
+	public void setMoney(int money) {
+		this.money = money;
+	}
+
+	public ArrayList<CityDTO> getCityList() {
+		return cityList;
+	}
+
+	public void setCityList(ArrayList<CityDTO> cityList) {
+		this.cityList = cityList;
+	}
+	
+	public boolean isLive() {
+		return isLive;
+	}
+
+	public void setLive(boolean isLive) {
+		this.isLive = isLive;
+	}
+	
+	public void go() {
+		
+	}
+
 }
