@@ -15,6 +15,8 @@ public class Board {
 	private static GameController gc = new GameController();
 
 	public static void main(String[] args) {
+		
+		System.out.println("anjdi");
 
 		Scanner scan = new Scanner(System.in);
 
