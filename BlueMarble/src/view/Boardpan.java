@@ -1,9 +1,9 @@
 package view;
 
-public class boardpan {
-
-	public static void main(String[] args) {
-
+public class Boardpan {
+	
+	public void show_boardpan() {
+		
 		System.out.printf("%-6s", "+---------");
 		System.out.printf("%-6s", "---------");
 		System.out.printf("%-6s", "---------");
@@ -211,7 +211,7 @@ public class boardpan {
 		System.out.printf("%-6s", "---------");
 		System.out.printf("%-6s", "---------");
 		System.out.printf("%-6s%n", "------------------------+");
-
+		
 	}
 //	public static void boardpan(String[] args) {
 //
