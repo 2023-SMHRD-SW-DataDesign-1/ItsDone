@@ -109,14 +109,14 @@ public class boardpan {
 		System.out.print("●");
 		System.out.print("      "); // 6
 		System.out.print("●");
-		System.out.print("    |"); // 까지 // 4
-		System.out.printf("%-4s", " "); // 주사위2 상반
+		System.out.print("   |"); // 까지 // 4
+		System.out.printf("%-5s", " "); // 주사위2 상반
 		System.out.print("|    ");
 		System.out.print("●");
 		System.out.print("      "); // 6
 		System.out.print("●");
-		System.out.print("    |"); // 까지 //4
-		System.out.printf("%-24s", " ");
+		System.out.print("   |"); // 까지 //4
+		System.out.printf("%-25s", " ");
 		System.out.printf("|%-8s|%n", "푸켓[26]");
 		System.out.printf("|%-9d|", 160000);
 		System.out.printf("%-3s", " ");
