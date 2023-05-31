@@ -14,6 +14,40 @@ public class RankingDTO {
 		this.score = score;
 		this.playtime = playtime;
 		this.ranking = ranking;
+		
+		
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	public int getPlaytime() {
+		return playtime;
+	}
+
+	public void setPlaytime(int playtime) {
+		this.playtime = playtime;
+	}
+
+	public int getRanking() {
+		return ranking;
+	}
+
+	public void setRanking(int ranking) {
+		this.ranking = ranking;
 	}
 
 }
