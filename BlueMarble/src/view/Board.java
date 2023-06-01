@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import controller.GameController;
+import controller.MusicController;
 import model.CityDTO;
 import model.DiceDTO;
 import model.GoldkeyDTO;
@@ -13,9 +14,8 @@ public class Board {
 
 	private static ArrayList<PlayerDTO> playerList = new ArrayList<>();
 	private static ArrayList<CityDTO> cityList = new ArrayList<>();
-	private static ArrayList<GoldkeyDTO> goldkeyList = new ArrayList<>();
 	private static GameController gc = new GameController();
-	
+	private static MusicController mc = new MusicController();
 
 	private static String[] playerNameArray = new String[4];
 	private static int[] playerMoneyArray = new int[4];
@@ -24,6 +24,7 @@ public class Board {
 	public static void main(String[] args) {
 
 		showOpenning();
+		mc.play(0);
 
 //		cityList = gc.getCityList();
 //		showBoard();
@@ -82,6 +83,8 @@ public class Board {
 
 						if (alivePlayer.size() == 1) {
 							// 랭킹 등록
+							mc.stop();
+							mc.play(8);
 							String winnerName = playerList.get(alivePlayer.get(0)).getName();
 							int winnerMoney = playerList.get(alivePlayer.get(0)).getMoney();
 
@@ -108,11 +111,11 @@ public class Board {
 
 						// 무인도체크
 						if (playerList.get(playerNum).getIslandCount() > 0) {
+							mc.stop();
+							mc.play(5);
+							showIsland();
 							System.out.println(playerList.get(playerNum).getName() + "님은 무인도에 갇혔습니다. 탈출까지 "
 									+ playerList.get(playerNum).getIslandCount() + "턴 남았습니다.");
-
-							// 무인도 이미지 보여주기
-
 							playerList.get(playerNum).decreaseIslandCount(); // 무인도 count 1씩 감소
 							playerNum++;
 							continue;
@@ -125,6 +128,8 @@ public class Board {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
+						mc.stop();
+						mc.play(1);
 						showBoard(); // 보드판 보여주기
 
 						System.out.println("\n" + playerList.get(playerNum).getName() + "님 차례입니다.");
@@ -133,7 +138,8 @@ public class Board {
 
 						// 주사위 굴리기
 						if (select == 1) {
-
+							mc.stop();
+							mc.play(2);
 							DiceDTO dice = gc.rollDice();
 
 							int dice1 = dice.getDice1();
@@ -167,30 +173,35 @@ public class Board {
 								System.out.println("출발지점 입니다.");
 								playerLocationArray[playerNum] = "출발";
 							} else if (cityName.equals("무인도")) {
+								mc.stop();
+								mc.play(5);
+								showIsland();
 								System.out.println("무인도에 갇혔습니다. 3턴간 움직일 수 없습니다.");
 								playerLocationArray[playerNum] = "무인도";
 								playerList.get(playerNum).setIslandCount(2);
 							} else if (cityName.equals("황금열쇠")) {
+								mc.stop();
+								mc.play(6);
 								playerLocationArray[playerNum] = "황금열쇠";
 								System.out.println("황금열쇠를 뽑습니다.");
 								GoldkeyDTO goldkey = gc.getGoldkeyList();
-								
+
 								int keynum = goldkey.getGoldNum();
-								
+
 								System.out.println("이름 : " + goldkey.getGoldname());
 								System.out.println("효과 : " + goldkey.getGoldeffect());
-								
-								if(keynum == 1) {
+
+								if (keynum == 1) {
 									playerMoneyArray[playerNum] = playerList.get(playerNum).decreaseMoney(100000);
-								}else if(keynum ==2) {
+								} else if (keynum == 2) {
 									playerMoneyArray[playerNum] = playerList.get(playerNum).addMoney(200000);
-								}else if(keynum ==3) {
+								} else if (keynum == 3) {
 									playerMoneyArray[playerNum] = playerList.get(playerNum).decreaseMoney(100000);
-								}else if(keynum ==4) {
+								} else if (keynum == 4) {
 									playerMoneyArray[playerNum] = playerList.get(playerNum).addMoney(100000);
 								}
-			
-							} 
+
+							}
 							// 도시
 							else {
 								// 도시 정보 출력
@@ -234,7 +245,6 @@ public class Board {
 										cityOwner = cityList.get(location).setOwner(playerNum); // city의 owner 변경
 										playerMoney = playerList.get(playerNum).decreaseMoney(cityPrice); // player 돈 차감
 										playerMoneyArray[playerNum] = playerMoney;
-
 										System.out.println("구매를 완료했습니다.");
 										System.out.println("구매자 : " + playerList.get(cityOwner).getName() + "님, 소지금 : "
 												+ playerMoney);
@@ -300,7 +310,7 @@ public class Board {
 							if (playerList.get(playerNum).getCityList().size() > 0) {
 
 								for (int i = 0; i < playerList.get(playerNum).getCityList().size(); i++) {
-									
+
 								}
 
 							}
@@ -367,7 +377,6 @@ public class Board {
 		System.out.printf("%-6s", "---------");
 		System.out.printf("%-6s", "---------");
 		System.out.printf("%-6s%n", "----------------+");
-
 		System.out.printf("|%8s|", cityList.get(14).getName() + "[15]");
 		System.out.printf("|%8s|", cityList.get(15).getName() + "[16]");
 		System.out.printf("|%8s|", cityList.get(16).getName() + "[17]");
@@ -566,6 +575,34 @@ public class Board {
 		System.out.printf("%-6s", "---------");
 		System.out.printf("%-6s", "---------");
 		System.out.printf("%-6s%n", "------------------------+");
+	}
+
+	public static void showIsland() {
+		System.out.println("⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠉⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
+				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠁⠀⠀⠀⣠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
+				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⣾⡿⠿⠛⠛⠉⠉⠛⠛⠿⢿⣿⣿⣿⣿⣿⣿⠿⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
+				+ "⣿⣿⣿⡟⠛⠋⠉⠉⠉⠛⠻⢿⡇⠀⢀⠜⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣙⣿⣿⣿⣿⣿⣦⡀⠀⠉⠙⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
+				+ "⣿⡿⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠀⠀⠀⠀⠤⣤⣤⣴⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⡄⠀⠀⠀⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
+				+ "⣿⣶⣶⣶⣾⣿⣿⠿⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⣿⣿⣿⣿⡿⠋⠉⠀⠀⠀⠀⠈⠉⠻⢆⠀⠀⢸⣿⡿⠿⠛⠻⠿⣿⣿⣿⣿\r\n"
+				+ "⣿⣿⣿⣿⣿⠏⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⡀⠀⠀⠀⠈⣿⣿⣿⣶⣶⣶⣦⣤⣤⣀⡀⠀⠀⠀⠀⠀⠈⠉⠀⠀⠀⠀⠀⠈⠙⣿⣿\r\n"
+				+ "⣿⣿⣿⡟⠁⠀⠀⠀⢀⣴⠁⠀⠀⢸⣧⠀⠀⠀⠹⣷⣶⣄⡀⠘⣿⣿⣿⣿⣿⣿⣿⡟⠉⠉⠀⠀⠀⠀⠀⠀⠀⠒⠲⢶⣶⣶⣶⣤⣬⣿\r\n"
+				+ "⣿⣿⣿⠇⠀⠀⠀⣴⣿⣿⠀⠀⠀⢸⣿⣷⠀⠀⠀⠸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣿⣿⣿⣿\r\n"
+				+ "⣿⣿⣿⠀⠀⣠⣾⣿⣿⣿⡆⠀⠀⢸⣿⣿⣷⡀⠀⠀⠈⢿⣿⣿⣿⣿⣿⣿⣿⣏⣀⣤⣾⡿⠀⠀⠀⣸⡀⠀⠀⢳⣄⠀⠀⠀⠸⣿⣿⣿\r\n"
+				+ "⣿⣿⣿⣀⣴⣿⣿⣿⣿⣿⣿⣆⡀⢸⣿⣿⣿⣿⠀⠀⠀⠘⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠀⠀⠀⣰⣿⡇⠀⠀⣼⣿⣷⡀⠀⠀⢻⣿⣿\r\n"
+				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣾⣿⣿⣿⣿⣧⠀⠀⠀⠘⣿⣿⣿⣿⣿⣿⣿⣿⡟⠀⠀⠀⢰⣿⣿⡇⠀⣠⣿⣿⣿⣿⣦⡀⣸⣿⣿\r\n"
+				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⢻⣿⣿⣿⣿⣿⣿⡟⠀⠀⠀⢀⣾⣿⣿⣧⣾⣿⣿⣿⣿⣿⣿⣷⣿⣿⣿\r\n"
+				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡀⠀⠀⠀⢻⣿⣿⣿⣿⣿⠃⠀⠀⠀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
+				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⠀⠀⠀⠈⣿⣿⣿⣿⡏⠀⠀⠀⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
+				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡆⠀⠀⠀⢻⣿⣿⡟⠀⠀⠀⠀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
+				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣇⠀⠀⠀⠈⣿⣿⡇⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
+				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡀⠀⠀⠀⢹⣿⠁⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
+				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⠸⡟⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
+				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠇⠀⠀⠀⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
+				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
+				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠿⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
+				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠋⠉⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠉⠙⠛⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
+				+ "⣿⣿⣿⣿⣿⣿⣿⣿⠟⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠻⢿⣿⣿⣿⣿⣿⣿⣿\r\n"
+				+ "⣿⣿⣿⣿⣿⣿⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿⣿⣿⣿⣿");
 	}
 
 	public static void showOpenning() {
