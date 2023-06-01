@@ -87,7 +87,8 @@ public class Board {
 							mc.play(8);
 							String winnerName = playerList.get(alivePlayer.get(0)).getName();
 							int winnerMoney = playerList.get(alivePlayer.get(0)).getMoney();
-
+						
+							showTropy();
 							System.out.print(winnerName + "님께서 승리하셨습니다.");
 							System.out.println(" 소지금 : " + winnerMoney + "원");
 
@@ -118,6 +119,7 @@ public class Board {
 									+ playerList.get(playerNum).getIslandCount() + "턴 남았습니다.");
 							playerList.get(playerNum).decreaseIslandCount(); // 무인도 count 1씩 감소
 							playerNum++;
+
 							continue;
 						}
 
@@ -135,9 +137,9 @@ public class Board {
 						System.out.println("\n" + playerList.get(playerNum).getName() + "님 차례입니다.");
 						System.out.print("[1]주사위를 굴린다 [0]기권한다 >> ");
 						int select = scan.nextInt();
-						
+
 						mc.stop();
-						mc.play(2);				
+						mc.play(2);
 						// 주사위 굴리기
 						if (select == 1) {
 
@@ -175,6 +177,12 @@ public class Board {
 							if (cityName.equals("출발")) {
 								System.out.println("출발지점 입니다.");
 								playerLocationArray[playerNum] = "출발";
+								try {
+									Thread.sleep(1000);
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 							} else if (cityName.equals("무인도")) {
 								mc.stop();
 								mc.play(5);
@@ -182,10 +190,17 @@ public class Board {
 								System.out.println("무인도에 갇혔습니다. 3턴간 움직일 수 없습니다.");
 								playerLocationArray[playerNum] = "무인도";
 								playerList.get(playerNum).setIslandCount(2);
+								try {
+									Thread.sleep(1000);
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 							} else if (cityName.equals("황금열쇠")) {
 								mc.stop();
 								mc.play(6);
 								playerLocationArray[playerNum] = "황금열쇠";
+								showGoldkey();
 								System.out.println("황금열쇠를 뽑습니다.");
 								GoldkeyDTO goldkey = gc.getGoldkeyList();
 
@@ -202,6 +217,12 @@ public class Board {
 									playerMoneyArray[playerNum] = playerList.get(playerNum).decreaseMoney(100000);
 								} else if (keynum == 4) {
 									playerMoneyArray[playerNum] = playerList.get(playerNum).addMoney(100000);
+								}
+								try {
+									Thread.sleep(1000);
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
 								}
 
 							}
@@ -321,6 +342,7 @@ public class Board {
 							playerLocationArray[playerNum] = "기권";
 							playerMoneyArray[playerNum] = 0;
 							playerNum++;
+							
 							continue;
 						}
 
@@ -337,14 +359,28 @@ public class Board {
 			case 2:
 				// DB에 접속하여 랭킹 테이블에서 데이터 가져오기
 				System.out.println("랭킹을 확인합니다.");
+				System.out.println();
+				System.out.println(
+						"     :+: :+: :+:       :+: :+:      :+:+:   :+:       :+:   :+:   \r\n"
+						+ "    +:+    +:+       +:+   +:+     :+:+:+  +:+       +:+  +:+     \r\n"
+						+ "   +#++:++#:       +#++:++#++:    +#+ +:+ +#+       +#++:++       \r\n"
+						+ "  +#+    +#+      +#+     +#+    +#+  +#+#+#       +#+  +#+       \r\n"
+						+ " #+#    #+#      #+#     #+#    #+#   #+#+#       #+#   #+#       \r\n"
+						+ "###    ###      ###     ###    ###    ####       ###    ###    ");
+				System.out.println();
 
 				ArrayList<PlayerDTO> rankList = gc.getRankList();
 
 				System.out.println("랭킹\t\t이름\t\t점수");
 
 				for (int i = 0; i < rankList.size(); i++) {
-					System.out.println(
-							(i + 1) + "위\t\t" + rankList.get(i).getName() + "\t\t" + rankList.get(i).getMoney());
+			         if(i==0) {
+			             System.out.println(
+			                   (i + 1) + "위\t\t" + rankList.get(i).getName() + "♣\t\t" + rankList.get(i).getMoney());
+			          }else
+			          System.out.println(
+			                (i + 1) + "위\t\t" + rankList.get(i).getName() + "\t\t" + rankList.get(i).getMoney());
+
 				}
 
 				break;
@@ -379,8 +415,9 @@ public class Board {
 		System.out.printf("%-6s", "---------");
 		System.out.printf("%-6s", "---------");
 		System.out.printf("%-6s", "---------");
-		System.out.printf("%-6s%n", "----------------+");
-		System.out.printf("|%8s|", cityList.get(14).getName() + "[15]");
+		System.out.printf("%-6s%n", "---------------------------------+");
+
+		System.out.printf("|%11s|", cityList.get(14).getName() + "[15]");
 		System.out.printf("|%8s|", cityList.get(15).getName() + "[16]");
 		System.out.printf("|%8s|", cityList.get(16).getName() + "[17]");
 		System.out.printf("|%8s|", cityList.get(17).getName() + "[18]");
@@ -388,13 +425,13 @@ public class Board {
 		System.out.printf("|%8s|", cityList.get(19).getName() + "[20]");
 		System.out.printf("|%8s|", cityList.get(20).getName() + "[21]");
 		System.out.printf("|%8s|%n", cityList.get(21).getName() + "[22]");
-		System.out.printf("|%9d|", cityList.get(14).getPrice());
-		System.out.printf("|%9d|", cityList.get(15).getPrice());
+		System.out.printf("|%12d|", cityList.get(14).getPrice());
+		System.out.printf("|%13d|", cityList.get(15).getPrice());
 		System.out.printf("|%9d|", cityList.get(16).getPrice());
-		System.out.printf("|%9d|", cityList.get(17).getPrice());
-		System.out.printf("|%9d|", cityList.get(18).getPrice());
-		System.out.printf("|%9d|", cityList.get(19).getPrice());
-		System.out.printf("|%9d|", cityList.get(20).getPrice());
+		System.out.printf("|%12d|", cityList.get(17).getPrice());
+		System.out.printf("|%11d|", cityList.get(18).getPrice());
+		System.out.printf("|%11d|", cityList.get(19).getPrice());
+		System.out.printf("|%11d|", cityList.get(20).getPrice());
 		System.out.printf("|%9d|%n", cityList.get(21).getPrice());
 		System.out.printf("%-6s", "|--------");
 		System.out.printf("%-6s", "---------");
@@ -403,9 +440,9 @@ public class Board {
 		System.out.printf("%-6s", "---------");
 		System.out.printf("%-6s", "---------");
 		System.out.printf("%-6s", "---------");
-		System.out.printf("%-6s%n", "-------------------------|");
+		System.out.printf("%-6s%n", "-------------------------------------------|");
 		System.out.printf("|%-8s|", cityList.get(13).getName() + "[14]");
-		System.out.printf("%-67s", " ");
+		System.out.printf("%-80s", " ");
 		System.out.printf("|%-8s|%n", cityList.get(22).getName() + "[23]");
 		System.out.printf("|%-9s|", cityList.get(13).getPrice());
 		System.out.printf("%-5s", " ");
@@ -414,137 +451,137 @@ public class Board {
 		System.out.print("★보유금액★");
 		System.out.printf("%-5s", " ");
 		System.out.print("★위치★");
-		System.out.printf("%-32s", " ");
+		System.out.printf("%-36s", " ");
 		System.out.printf("|%-9d|%n", cityList.get(22).getPrice());
 		System.out.printf("|%-9s|", "---------");
 		System.out.printf("%-4s", " ");
 		System.out.printf("|%-8s|", playerNameArray[0]);
-		System.out.printf("%-1s", " ");
+		System.out.printf("%-5s", " ");
 		System.out.printf("|%-8s|", playerMoneyArray[0]);
-		System.out.printf("%-1s", " ");
+		System.out.printf("%-5s", " ");
 		System.out.printf("|%-8s|", playerLocationArray[0]);
-		System.out.printf("%-29s", " ");
+		System.out.printf("%-35s", " ");
 		System.out.printf("|%-8s|%n", "---------");
 		System.out.printf("|%-8s|", cityList.get(12).getName() + "[13]");
-		System.out.printf("%-4s", " ");
+		System.out.printf("%-2s", " ");
 		System.out.printf("|%-8s|", playerNameArray[1]);
-		System.out.printf("%-1s", " ");
+		System.out.printf("%-5s", " ");
 		System.out.printf("|%-8s|", playerMoneyArray[1]);
-		System.out.printf("%-1s", " ");
+		System.out.printf("%-5s", " ");
 		System.out.printf("|%-8s|", playerLocationArray[1]);
-		System.out.printf("%-29s", " ");
+		System.out.printf("%-35s", " ");
 		System.out.printf("|%-8s|%n", cityList.get(23).getName() + "[24]");
 		System.out.printf("|%-9d|", cityList.get(12).getPrice());
 		System.out.printf("%-4s", " ");
 		System.out.printf("|%-8s|", playerNameArray[2]);
-		System.out.printf("%-1s", " ");
+		System.out.printf("%-5s", " ");
 		System.out.printf("|%-8s|", playerMoneyArray[2]);
-		System.out.printf("%-1s", " ");
+		System.out.printf("%-5s", " ");
 		System.out.printf("|%-8s|", playerLocationArray[2]);
-		System.out.printf("%-29s", " ");
+		System.out.printf("%-35s", " ");
 		System.out.printf("|%-9d|%n", cityList.get(23).getPrice());
 		System.out.printf("|%-9s|", "---------");
 		System.out.printf("%-4s", " ");
 		System.out.printf("|%-8s|", playerNameArray[3]);
-		System.out.printf("%-1s", " ");
+		System.out.printf("%-5s", " ");
 		System.out.printf("|%-8s|", playerMoneyArray[3]);
-		System.out.printf("%-1s", " ");
+		System.out.printf("%-5s", " ");
 		System.out.printf("|%-8s|", playerLocationArray[3]);
-		System.out.printf("%-29s", " ");
+		System.out.printf("%-35s", " ");
 		System.out.printf("|%-8s|%n", "---------");
 		System.out.printf("|%-8s|", cityList.get(11).getName() + "[12]");
 		// System.out.printf("|%-4s|", " ");
-		System.out.printf("%-67s", " ");
+		System.out.printf("%-80s", " ");
 		System.out.printf("|%-8s|%n", cityList.get(24).getName() + "[25]");
 		System.out.printf("|%-9d|", cityList.get(11).getPrice());
 		System.out.printf("%-4s", " ");
-		System.out.printf("%-14s", "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
-		System.out.printf("%-4s", " ");
-		System.out.printf("%-14s", "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
-		System.out.printf("%-23s", " ");
-		System.out.printf("|%-9s|%n", cityList.get(24).getPrice());
+		System.out.printf("%-32s", "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
+
+		System.out.printf("%-20s", " ");
+		System.out.printf("|%-10s|%n", cityList.get(24).getPrice());
 		System.out.printf("|%-9s|", "---------");
+		System.out.printf("%-3s", "   ");
+		System.out.print("                          "); // 22
 		System.out.printf("%-3s", " ");
-		System.out.print(" |               | "); // 15
-		System.out.printf("%-3s", " ");
-		System.out.print(" |               | "); // 15
-		System.out.printf("%-23s", " ");
+		System.out.print("                          "); // 22
+		System.out.printf("%-25s", " ");
 		System.out.printf("|%-8s|%n", "---------");
 		System.out.printf("|%-8s|", cityList.get(10).getName() + "[11]");
-		System.out.printf("%-4s", " "); // 주사위1 상반
-		System.out.printf("|%-4s", "    ");
-		System.out.print("●");
-		System.out.print("      "); // 6
-		System.out.print("●");
-		System.out.print("   |"); // 까지 // 4
+		System.out.printf("%-1s", " "); // 주사위1 상반
+		System.out.printf("%-4s", "    ");
+
+		System.out.print("        "); // 7
+
+		System.out.print("       "); // 까지 // 50
 		System.out.printf("%-5s", " "); // 주사위2 상반
-		System.out.print("|    ");
-		System.out.print("●");
-		System.out.print("      "); // 6
-		System.out.print("●");
-		System.out.print("   |"); // 까지 //4
-		System.out.printf("%-25s", " ");
+		System.out.print("    ");
+
+		System.out.print("        ");
+
+		System.out.print("      "); // 까지 //4
+		System.out.printf("%-37s", " ");
 		System.out.printf("|%-8s|%n", cityList.get(25).getName() + "[26]");
 		System.out.printf("|%-9d|", cityList.get(10).getPrice());
 		System.out.printf("%-3s", " ");
-		System.out.print(" |               | ");
+		System.out.print("                        "); // 22
 		System.out.printf("%-3s", " ");
-		System.out.print(" |               | ");
-		System.out.printf("%-24s", " ");
+		System.out.print("                         "); // 22
+		System.out.printf("%-28s", " ");
 		System.out.printf("|%-8d|%n", cityList.get(25).getPrice());
 		System.out.printf("|%-9s|", "---------");
 		System.out.printf("%-4s", " "); // 주사위1
-		System.out.printf("|%-4s", "    ");
-		System.out.print("●");
-		System.out.print("      "); // 6
-		System.out.print("●");
-		System.out.print("   |"); // 까지 // 4
-		System.out.printf("%-5s", " "); // 주사위2
-		System.out.print("|    ");
-		System.out.print("●");
-		System.out.print("      "); // 6
-		System.out.print("●");
-		System.out.print("   |"); // 까지 //4
-		System.out.printf("%-25s", " ");
+		System.out.printf("%-4s", "     "); // 5
+
+		System.out.print("    "); // 5
+
+		System.out.print("    "); // 5
+
+		System.out.print("    "); // 까지 // 2
+		System.out.printf("%-5s", "   "); // 주사위2
+		System.out.print("    "); // 5
+
+		System.out.print("    "); // 5
+
+		System.out.print("    "); // 5
+
+		System.out.print("    "); // 까지 //5
+		System.out.printf("%-41s", " ");
 		System.out.printf("|%-7s|%n", "--------");
 		System.out.printf("|%-8s|", cityList.get(9).getName() + "[10]");
+		System.out.printf("%-1s", " ");
+		System.out.print("                        "); // 20
 		System.out.printf("%-3s", " ");
-		System.out.print(" |               | "); // 15
-		System.out.printf("%-3s", " ");
-		System.out.print(" |               | "); // 15
-		System.out.printf("%-23s", " ");
+		System.out.print("                        "); // 20
+		System.out.printf("%-28s", " ");
 		System.out.printf("|%-8s|%n", cityList.get(26).getName() + "[27]");
 		System.out.printf("|%-9s|", cityList.get(9).getPrice());
 		System.out.printf("%-4s", " "); // 주사위1 하반
-		System.out.print("|    ");
-		System.out.print("●");
-		System.out.print("      ");
-		System.out.print("●");
-		System.out.print("   |"); // 까지
-		System.out.printf("%-5s", " "); // 주사위2 하반
-		System.out.print("|    ");
-		System.out.print("●");
-		System.out.print("      ");
-		System.out.print("●");
-		System.out.print("   |"); // 까지
-		System.out.printf("%-25s", " ");
+		System.out.print("     ");
+
+		System.out.print("       ");
+
+		System.out.print("     "); // 까지
+		System.out.printf("%-6s", " "); // 주사위2 하반
+		System.out.print("     ");
+
+		System.out.print("       ");
+
+		System.out.print("     "); // 까지
+		System.out.printf("%-39s", " ");
 		System.out.printf("|%-8d|%n", cityList.get(26).getPrice());
 		System.out.printf("|%-9s|", "---------");
 		System.out.printf("%-3s", " ");
-		System.out.print(" |               | "); // 15
+		System.out.print("                          "); // 22
 		System.out.printf("%-3s", " ");
-		System.out.print(" |               | "); // 15
-		System.out.printf("%-24s", " ");
+		System.out.print("                          "); // 22
+		System.out.printf("%-26s", " ");
 		System.out.printf("|%-7s|%n", "--------");
 		System.out.printf("|%-8s|", cityList.get(8).getName() + "[9]");
-		System.out.printf("%-4s", " ");
-		System.out.printf("%-14s", "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
-		System.out.printf("%-4s", " ");
-		System.out.printf("%-14s", "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
-		System.out.printf("%-24s", " ");
+		System.out.printf("%-81s", " ");
+
 		System.out.printf("|%-7s|%n", cityList.get(27).getName() + "[28]");
 		System.out.printf("|%-9d|", cityList.get(8).getPrice());
-		System.out.printf("%-68s", " ");
+		System.out.printf("%-83s", " ");
 		System.out.printf("|%-8d|%n", cityList.get(27).getPrice());
 		System.out.printf("%-6s", "|--------");
 		System.out.printf("%-6s", "---------");
@@ -553,7 +590,7 @@ public class Board {
 		System.out.printf("%-6s", "---------");
 		System.out.printf("%-6s", "---------");
 		System.out.printf("%-6s", "---------");
-		System.out.printf("%-6s%n", "-------------------------|");
+		System.out.printf("%-6s%n", "-----------------------------------------|");
 		System.out.printf("|%-8s|", cityList.get(7).getName() + "[8]");
 		System.out.printf("|%-8s|", cityList.get(6).getName() + "[7]");
 		System.out.printf("|%-8s|", cityList.get(5).getName() + "[6]");
@@ -562,14 +599,14 @@ public class Board {
 		System.out.printf("|%-8s|", cityList.get(2).getName() + "[3]");
 		System.out.printf("|%-8s|", cityList.get(1).getName() + "[2]");
 		System.out.printf("|%-8s|%n", cityList.get(0).getName() + "[1]");
-		System.out.printf("|%-9s|", cityList.get(7).getPrice());
-		System.out.printf("|%-9d|", cityList.get(6).getPrice());
-		System.out.printf("|%-9d|", cityList.get(5).getPrice());
-		System.out.printf("|%-10s|", cityList.get(4).getPrice());
-		System.out.printf("|%-9d|", cityList.get(3).getPrice());
-		System.out.printf("|%-9d|", cityList.get(2).getPrice());
-		System.out.printf("|%-9d|", cityList.get(1).getPrice());
-		System.out.printf("|%-9s|%n", "<-");
+		System.out.printf("|%-11s|", cityList.get(7).getPrice());
+		System.out.printf("|%-11d|", cityList.get(6).getPrice());
+		System.out.printf("|%-12d|", cityList.get(5).getPrice());
+		System.out.printf("|%-12s|", cityList.get(4).getPrice());
+		System.out.printf("|%-11d|", cityList.get(3).getPrice());
+		System.out.printf("|%-12d|", cityList.get(2).getPrice());
+		System.out.printf("|%-11d|", cityList.get(1).getPrice());
+		System.out.printf("|%-11s|%n", "<-");
 		System.out.printf("%-6s", "+---------");
 		System.out.printf("%-6s", "---------");
 		System.out.printf("%-6s", "---------");
@@ -577,35 +614,37 @@ public class Board {
 		System.out.printf("%-6s", "---------");
 		System.out.printf("%-6s", "---------");
 		System.out.printf("%-6s", "---------");
-		System.out.printf("%-6s%n", "------------------------+");
+		System.out.printf("%-6s%n", "-----------------------------------------+");
 	}
 
 	public static void showIsland() {
-		System.out.println("⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠉⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
-				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠁⠀⠀⠀⣠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
-				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⣾⡿⠿⠛⠛⠉⠉⠛⠛⠿⢿⣿⣿⣿⣿⣿⣿⠿⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
-				+ "⣿⣿⣿⡟⠛⠋⠉⠉⠉⠛⠻⢿⡇⠀⢀⠜⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣙⣿⣿⣿⣿⣿⣦⡀⠀⠉⠙⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
-				+ "⣿⡿⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠀⠀⠀⠀⠤⣤⣤⣴⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⡄⠀⠀⠀⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
-				+ "⣿⣶⣶⣶⣾⣿⣿⠿⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⣿⣿⣿⣿⡿⠋⠉⠀⠀⠀⠀⠈⠉⠻⢆⠀⠀⢸⣿⡿⠿⠛⠻⠿⣿⣿⣿⣿\r\n"
-				+ "⣿⣿⣿⣿⣿⠏⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⡀⠀⠀⠀⠈⣿⣿⣿⣶⣶⣶⣦⣤⣤⣀⡀⠀⠀⠀⠀⠀⠈⠉⠀⠀⠀⠀⠀⠈⠙⣿⣿\r\n"
-				+ "⣿⣿⣿⡟⠁⠀⠀⠀⢀⣴⠁⠀⠀⢸⣧⠀⠀⠀⠹⣷⣶⣄⡀⠘⣿⣿⣿⣿⣿⣿⣿⡟⠉⠉⠀⠀⠀⠀⠀⠀⠀⠒⠲⢶⣶⣶⣶⣤⣬⣿\r\n"
-				+ "⣿⣿⣿⠇⠀⠀⠀⣴⣿⣿⠀⠀⠀⢸⣿⣷⠀⠀⠀⠸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣿⣿⣿⣿\r\n"
-				+ "⣿⣿⣿⠀⠀⣠⣾⣿⣿⣿⡆⠀⠀⢸⣿⣿⣷⡀⠀⠀⠈⢿⣿⣿⣿⣿⣿⣿⣿⣏⣀⣤⣾⡿⠀⠀⠀⣸⡀⠀⠀⢳⣄⠀⠀⠀⠸⣿⣿⣿\r\n"
-				+ "⣿⣿⣿⣀⣴⣿⣿⣿⣿⣿⣿⣆⡀⢸⣿⣿⣿⣿⠀⠀⠀⠘⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠀⠀⠀⣰⣿⡇⠀⠀⣼⣿⣷⡀⠀⠀⢻⣿⣿\r\n"
-				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣾⣿⣿⣿⣿⣧⠀⠀⠀⠘⣿⣿⣿⣿⣿⣿⣿⣿⡟⠀⠀⠀⢰⣿⣿⡇⠀⣠⣿⣿⣿⣿⣦⡀⣸⣿⣿\r\n"
-				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⢻⣿⣿⣿⣿⣿⣿⡟⠀⠀⠀⢀⣾⣿⣿⣧⣾⣿⣿⣿⣿⣿⣿⣷⣿⣿⣿\r\n"
-				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡀⠀⠀⠀⢻⣿⣿⣿⣿⣿⠃⠀⠀⠀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
-				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⠀⠀⠀⠈⣿⣿⣿⣿⡏⠀⠀⠀⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
-				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡆⠀⠀⠀⢻⣿⣿⡟⠀⠀⠀⠀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
-				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣇⠀⠀⠀⠈⣿⣿⡇⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
-				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡀⠀⠀⠀⢹⣿⠁⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
-				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⠸⡟⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
-				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠇⠀⠀⠀⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
-				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
-				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠿⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
-				+ "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠋⠉⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠉⠙⠛⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n"
-				+ "⣿⣿⣿⣿⣿⣿⣿⣿⠟⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠻⢿⣿⣿⣿⣿⣿⣿⣿\r\n"
-				+ "⣿⣿⣿⣿⣿⣿⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿⣿⣿⣿⣿");
+		System.out.println("\r\n" + "\r\n" + "@                  @@@@@@@        @@   @@@@@@@@@@@\r\n"
+				+ "@@@@@@@........,,,,,,,@@@@..........   @@     @@@@\r\n"
+				+ "@@@@@@......,:::-,,,,,,@@@...........          @@@\r\n"
+				+ "@@@@@......,,,::::,,,,,@@@@@@@ ......           @@\r\n"
+				+ "@@@@......,,,,::::@@~,,,@@@@@@@@.,,,...   @@@@   @\r\n"
+				+ "@@@@.....@,,,,@::::@@@,,@@@@@@@,,,,,-:-.....@@@@@@\r\n"
+				+ "@@@.....@@,,,,@:::::@@@@@@@@@@,,,,,,::-......@@@@@\r\n"
+				+ "@@@....@@@,,,,@@::::@@@@@@@@@@,,,.,:::,,......@@@@\r\n"
+				+ "@@@....@@@,,,,@@@::::@@@@@@@@.,,@@::::,,,.....@@@@\r\n"
+				+ "@@@...@@@@@,,,@@@::::@@@@@@@@.,@@;:::~.,,,@....@@@\r\n"
+				+ "@@@..@@@@@@,,,@@@@:::@@@@@@@@@@@ :::~@,,,,@....@@@\r\n"
+				+ "@@@@@@@@@@@@,,@@@@::::@@@@@@@@@@::::@@,,, @@...@@@\r\n"
+				+ "@@@@@@@@@@@@@@@@@@:::::@@@@@@@@@::::@@,,,@@@@..@@@\r\n"
+				+ "@@@@@@@@@@@@@@@@@@:::::@@@@@@@@::::@@,, @@@@@.@@@\r\n"
+				+ "@@@@@@@@@@@@@@@@@@@:::::@@@@@@@::::-@@@,@@@@@@@@@@\r\n"
+				+ "@@@@@@@@@@@@@@@@@@@;::::@@@@@@:::::@@@@@@@@@@@@@@@\r\n"
+				+ "@@@@@@@@@@@@@@@@@@@@::::~@@@@:::::@@@@@@@@@@@@@@@\r\n"
+				+ "@@@@@@@@@@@@@@@@@@@@:::::@@@@::::~@@@@@@@@@@@@@@@\r\n"
+				+ "@@@@@@@@@@@@@@@@@@@@@::::@@@:::::@@@@@@@@@@@@@@@@\r\n"
+				+ "@@@@@@@@@@@@@@@@@@@@@@::::::::::@@@@@@@@@@@@@@@@@@\r\n"
+				+ "@@@@@@@@@@@@@@@@@@@@@@@:::::::::@@@@@@@@@@@@@@@@@@\r\n"
+				+ "@@@@@@@@@@@@@@@@@@@@@@@:::::::::@@@@@@@@@@@@@@@@@@\r\n"
+				+ "@@@@@@@@@@@@@@@@@@@@@@@:::::::::@@@@@@@@@@@@@@@@@@\r\n"
+				+ "@@@@@@@@@@@@@@@@@@@    ~~~~~~~~:@@@@@@@@@@@@@@@@@@\r\n"
+				+ "@@@@@@@@@@@@@@@               ,    @@@@@@@@@@@@@@@\r\n"
+				+ "@@@@@@@@@@@@                          @@@@@@@@@@@@\r\n"
+				+ "@@@@@@@@@                                @@@@@@@@@\r\n");
 	}
 
 	public static void showOpenning() {
@@ -703,6 +742,56 @@ public class Board {
 				+ " ");
 	}
 
+	
+	public static void showTropy() {
+		System.out.println(".,=@@@@@@@@@*,.                 \r\n"
+				+ "              ~@*-              .!$#-             \r\n"
+				+ "           =         .-::-.           =           \r\n"
+				+ "           =   !#@-           .*@@-   #           \r\n"
+				+ "           @~;                      =:#           \r\n"
+				+ "        #-,;                          !--=.       \r\n"
+				+ "       ! :=                           -$$ -.      \r\n"
+				+ "      #  ., :                          ,   =      \r\n"
+				+ "       =  ;   #                    =    . :       \r\n"
+				+ "         ;  ;: $,                .# -*  :~        \r\n"
+				+ "          ;;  :*=,              .:*;  ~=          \r\n"
+				+ "            ,#- ,~-            ,~: .$-            \r\n"
+				+ "              # =;~~          ~~*- #              \r\n"
+				+ "              #  -=~~~.    .~~:!; ,!              \r\n"
+				+ "               $** :*~~;!!~~~$. ~*=.              \r\n"
+				+ "                     $,.,. -;                     \r\n"
+				+ "                     #      -                     \r\n"
+				+ "                     ,#$$$$@                      \r\n"
+				+ "                       *..#                       \r\n"
+				+ "                       =  !                       \r\n"
+				+ "                    !!!$!!#!!!                    \r\n"
+				+ "                   ,----------                    \r\n"
+				+ "               @@@@@@@@@@@@@#@@@@@@               \r\n"
+				+ "               !!****************!#               \r\n"
+				+ "               !=*             .;!!               \r\n"
+				+ "              =!=                !!$              \r\n"
+				+ "              !!==             -;;!!              \r\n"
+				+ "             .!!**!************!;!;*.             \r\n"
+				+ "            $****!**************!!***;            \r\n"
+				+ "            =!!!:!!!!!!!!!!!!!!;;!!!!=            \r\n"
+				+ "            @@@@#@@@@########@@######@  ");
+	}
+
+	public static void showGoldkey() {
+		System.out.println("                                                  \r\n"
+				+ "          ~-                                      \r\n"
+				+ "         ;, ,:                                    \r\n"
+				+ "        -.. .~:                                   \r\n"
+				+ "       ,-    ,!                                   \r\n"
+				+ "       ~-     ,.~:;;;;;;;;;;;;;;;;;;;;;:!         \r\n"
+				+ "       ~,     ,.                  ,~....:         \r\n"
+				+ "       :,     ~.................... .,,-*.        \r\n"
+				+ "        -     :                      . ,:,        \r\n"
+				+ "        ,-   :                           .        \r\n"
+				+ "        , ,~.,                                    \r\n"
+				+ "                                                  ");
+	}
+	
 	private static int getKorCnt(String kor) {
 		int cnt = 0;
 		for (int i = 0; i < kor.length(); i++) {
@@ -713,6 +802,9 @@ public class Board {
 		return cnt;
 	}
 
+	
+	
+	
 	public static String convert(String word, int size) {
 		String formatter = String.format("%%%ds", size - getKorCnt(word));
 		return String.format(formatter, word);
