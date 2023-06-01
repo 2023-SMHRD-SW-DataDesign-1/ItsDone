@@ -135,11 +135,12 @@ public class Board {
 						System.out.println("\n" + playerList.get(playerNum).getName() + "님 차례입니다.");
 						System.out.print("[1]주사위를 굴린다 [0]기권한다 >> ");
 						int select = scan.nextInt();
-
+						
+						mc.stop();
+						mc.play(2);				
 						// 주사위 굴리기
 						if (select == 1) {
-							mc.stop();
-							mc.play(2);
+
 							DiceDTO dice = gc.rollDice();
 
 							int dice1 = dice.getDice1();
@@ -149,6 +150,8 @@ public class Board {
 							int location = playerList.get(playerNum).getLocation() + diceSum;
 
 							if (location > (cityList.size() - 1)) {
+								mc.stop();
+								mc.play(4);
 								location -= cityList.size();
 								System.out.println("출발 지점을 경유하여 월급을 수령합니다.(+300,000원)");
 								playerList.get(playerNum).addMoney(300000);
